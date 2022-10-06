@@ -1,3 +1,10 @@
 training_pipeline_config:
   pipeline_name: NewsArticleSorting
   artifact_dir: NAS_Artifact_Dir
+
+
+data_ingestion_config:
+  training_input_dir: NASTrainingDatasets
+  prediction_input_dir: NASPredictionDatasets
+  training_dir: training_dataset
+  prediction_dir: prediction_dataset
