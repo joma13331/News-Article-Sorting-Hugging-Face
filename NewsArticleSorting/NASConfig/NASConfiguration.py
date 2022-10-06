@@ -75,3 +75,69 @@ class NASConfiguration:
 
         except Exception as e:
             raise NASException(e, sys) from e 
+
+    
+    def get_data_validation_config(self) -> DataValidationConfig:
+        try:
+
+            data_validation_config = self.config_info[DATA_VALIDATION_CONFIG_KEY]
+
+            schema_file_path = os.path.join(ROOT_DIR, data_validation_config[DATA_VALIDATION_SCHEMA_DIR_KEY],
+                                            data_validation_config[DATA_VALIDATION_SCHEMA_FILE_NAME_KEY])
+
+            validated_dir = os.path.join(self.training_pipeline_config.artifact_dir,
+                                            DATA_VALIDATION_ARTIFACT_DIR,
+                                            self.time_stamp,
+                                            data_validation_config[DATA_VALIDATION_VALIDATED_DIR_KEY])
+            if self.is_training:
+                validated_train_dir = os.path.join(validated_dir, DATA_VALIDATION_TRAIN_DIR)
+                validated_prediction_dir = None
+            else:
+                validated_train_dir = None
+                validated_prediction_dir = os.path.join(validated_dir, DATA_VALIDATION_PREDICTION_DIR)
+            
+
+            data_validation_config = DataValidationConfig(
+                schema_file_path=schema_file_path,
+                validated_dir=validated_dir,
+                validated_train_dir=validated_train_dir,
+                validated_prediction_dir=validated_prediction_dir
+            )
+
+            logging.info(f"The Data Validation Config: {data_validation_config}")
+
+            return data_validation_config
+            
+        except Exception as e:
+            raise NASException(e, sys) from e
+
+    def get_cassandra_database_config(self)-> CassandraDatabaseConfig:
+
+        try:
+            cassandra_db_config = self.config_info[CASSANDRA_DATABASE_CONFIG_KEY]
+
+            file_path_secure_connect = os.path.join(ROOT_DIR,
+                                        self.config_info[TRAINING_PIPELINE_CONFIG_KEY][TRAINING_PIPELINE_NAME_KEY],
+                                        cassandra_db_config[CASSANDRA_DATABASE_SECURE_CONNECT_BUNDLE_DIRECTORY_KEY],
+                                        cassandra_db_config[CASSANDRA_DATABASE_SECURE_CONNECT_BUNDLE_FILENAME_KEY])
+            if self.is_training:
+                table_name = cassandra_db_config[CASSANDRA_DATABASE_TRAINING_TABLE_NAME_KEY]
+            
+            else:
+                table_name = cassandra_db_config[CASSANDRA_DATABASE_PREDICTION_TABLE_NAME_KEY]
+
+            cassandra_client_id =os.getenv(cassandra_db_config[CASSANDRA_DATABASE_ENVIRONMENT_KEY_CLIENT_ID_KEY])
+            cassandra_client_secret = os.getenv(cassandra_db_config[CASSANDRA_DATABASE_ENVIRONMENT_KEY_CLIENT_SECRET_KEY])
+
+            keyspace_name = cassandra_db_config[CASSANDRA_DATABASE_KEYSPACE_NAME]
+            
+
+            return CassandraDatabaseConfig(
+                file_path_secure_connect=file_path_secure_connect,
+                table_name=table_name,
+                cassandra_client_id=cassandra_client_id,
+                cassandra_client_secret=cassandra_client_secret,
+                keyspace_name=keyspace_name
+            )
+        except Exception as e:
+            raise NASException(e, sys) from e

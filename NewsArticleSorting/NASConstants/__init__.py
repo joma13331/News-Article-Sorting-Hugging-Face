@@ -40,8 +40,18 @@ DATA_VALIDATION_SCHEMA_DIR_KEY = "schema_dir"
 DATA_VALIDATION_SCHEMA_FILE_NAME_KEY = "schema_file_name"
 DATA_VALIDATION_VALIDATED_DIR_KEY = "validated_dir"
 DATA_VALIDATION_TRAIN_DIR = "validated_train"
-DATA_VALIDATION_TEST_DIR = "validated_test"
 DATA_VALIDATION_PREDICTION_DIR = "validated_prediction"
+
+# Cassandra Database related variables
+CASSANDRA_DATABASE_CONFIG_KEY = "cassandra_database_config"
+CASSANDRA_DATABASE_TRAINING_TABLE_NAME_KEY = "training_table_name"
+CASSANDRA_DATABASE_PREDICTION_TABLE_NAME_KEY = "prediction_table_name"
+CASSANDRA_DATABASE_SECURE_CONNECT_BUNDLE_DIRECTORY_KEY = "secure_connect_bundle_directory"
+CASSANDRA_DATABASE_SECURE_CONNECT_BUNDLE_FILENAME_KEY = "secure_connect_bundle_filename"
+CASSANDRA_DATABASE_ENVIRONMENT_KEY_CLIENT_ID_KEY = "environment_key_client_id"
+CASSANDRA_DATABASE_ENVIRONMENT_KEY_CLIENT_SECRET_KEY = "environment_key_client_secret"
+CASSANDRA_DATABASE_KEYSPACE_NAME = "keyspace_name"
+
 
 # Data Preprocessing related variable
 DATA_PREPROCESSING_CONFIG_KEY = "data_preprocessing_config"

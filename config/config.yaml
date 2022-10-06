@@ -8,3 +8,19 @@ data_ingestion_config:
   prediction_input_dir: NASPredictionDatasets
   training_dir: training_dataset
   prediction_dir: prediction_dataset
+
+
+data_validation_config:
+  schema_dir: config
+  schema_file_name: schema.yaml
+  validated_dir: validated_dataset
+
+
+cassandra_database_config:
+  training_table_name: good_train_table
+  prediction_table_name: good_pred_table
+  secure_connect_bundle_directory: NASDatabase
+  secure_connect_bundle_filename: secure-connect-ineuron.zip
+  environment_key_client_id: CASSANDRA_CLIENT_ID
+  environment_key_client_secret: CASSANDRA_CLIENT_SECRET
+  keyspace_name: news_article_sorting_internship

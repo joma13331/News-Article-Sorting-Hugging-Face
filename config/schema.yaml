@@ -4,10 +4,10 @@ LengthOfTime: 6
 NunberOfColumns: 3
 ColumnNames:
   ArticleId: int
-  Text: str
+  Text: text
 
 TargetColumn:
-  Category: str
+  Category: text
 
 
 TargetColumnValues:

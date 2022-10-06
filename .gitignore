@@ -27,6 +27,8 @@ share/python-wheels/
 *.egg
 MANIFEST
 NAS_Artifact_Dir/
+*.zip
+*.ipynb
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
