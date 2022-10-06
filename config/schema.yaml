@@ -1,0 +1,18 @@
+SampleFileName: NAS_07092022_153756
+LengthOfDate: 8
+LengthOfTime: 6
+NunberOfColumns: 3
+ColumnNames:
+  ArticleId: int
+  Text: str
+
+TargetColumn:
+  Category: str
+
+
+TargetColumnValues:
+  - business
+  - tech
+  - sport
+  - politics
+  - entertainment

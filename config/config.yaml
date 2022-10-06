@@ -1,0 +1,3 @@
+training_pipeline_config:
+  pipeline_name: NewsArticleSorting
+  artifact_dir: NAS_Artifact_Dir

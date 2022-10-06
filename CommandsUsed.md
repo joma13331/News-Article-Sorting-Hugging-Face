@@ -24,7 +24,7 @@ git add .
 git commit -m "<message>"
 ```
 
-5. git remote: to store the repository address to a variable
+5. git remote add: to store the repository address to a variable
 ```
 git remote add <variable_name> <repository address>
 ```
@@ -37,6 +37,21 @@ git branch -m <old_branch_name> <new_branch_name>
 7. git remote: to check the repository address that are stored in variables variable
 ```
 git remote -v
+```
+
+8. git branch: to check all available branches in the git project
+```
+git branch
+```
+
+9. git branch <branch_name>: create a new branch with name branch_name
+```
+git branch <branch_name>
+```
+
+10. git checkout <branch_Name>: Switch to git branch with name branch_name
+```
+git checkout <branch_name>
 ```
 
 # Docker Commands used
