@@ -1,5 +1,6 @@
 import os
 import sys
+from sklearn.preprocessing import OneHotEncoder
 import yaml
 import pickle
 from NewsArticleSorting.NASException import NASException
@@ -31,6 +32,24 @@ def save_model(model, model_file_path):
         # Saving the model to the path 
         with open(model_file_path, 'wb') as f:
             pickle.dump(model, f)
+
+    except Exception as e:
+        raise NASException(e, sys) from e
+
+def load_model(model_file_path: str)-> OneHotEncoder:
+    """
+    :Function Name: load_model
+    :Description: This method loads the model from the given path
+
+    :param model_file_path: path where 
+    :return: OneHotEncoder object
+    """
+    try:
+        # Loading the model from the path 
+        with open(model_file_path, 'rb') as f:
+            model = pickle.load(f)
+
+        return model
 
     except Exception as e:
         raise NASException(e, sys) from e

@@ -14,4 +14,7 @@ DataValidationConfig = namedtuple("DataValidationConfig", ["schema_file_path", "
 CassandraDatabaseConfig = namedtuple("CassandraDatabaseConfig",
                         ["file_path_secure_connect","table_name",
                         "cassandra_client_id", "cassandra_client_secret",
-                        "keyspace_name"])       
+                        "keyspace_name"])    
+
+DataPreprocessingConfig = namedtuple("DataPreprocessingConfig", ["preprocessed_train_dir",
+ "preprocessed_pred_dir", "ohe_file_path"])   

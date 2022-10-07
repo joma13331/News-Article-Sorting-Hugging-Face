@@ -56,12 +56,9 @@ CASSANDRA_DATABASE_KEYSPACE_NAME = "keyspace_name"
 # Data Preprocessing related variable
 DATA_PREPROCESSING_CONFIG_KEY = "data_preprocessing_config"
 DATA_PREPROCESSING_ARTIFACT_DIR = "DataPreprocessed"
-DATA_PREPROCESSING_PREPROCESSED_DIR_KEY = "preprocessed_dir"
-DATA_PREPROCESSING_TRAIN_DIR = "preprocessde_train"
-DATA_PREPROCESSING_TEST_DIR = "preprocessed_test"
+DATA_PREPROCESSING_TRAIN_DIR = "preprocessed_train"
 DATA_PREPROCESSING_PRED_DIR = "preprocessed_pred"
-DATA_PREPROCESSING_COLUMN_TO_DROP_KEY = "column_to_drop"
-DATA_PREPROCESSING_MODEL_DIR_KEY = "model_dir"
+DATA_PREPROCESSING_OHE_MODEL_DIR_KEY = "ohe_model_dir"
 DATA_PREPROCESSING_ONE_HOT_ENCODER_FILE_NAME_KEY = "one_hot_encoder_file_name"
 
 # Model Trainer related variable

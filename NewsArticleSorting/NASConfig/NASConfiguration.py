@@ -141,3 +141,41 @@ class NASConfiguration:
             )
         except Exception as e:
             raise NASException(e, sys) from e
+
+
+    def get_data_preprocessing_config(self)-> DataPreprocessingConfig:
+        try:
+            data_preprocessing_config = self.config_info[DATA_PREPROCESSING_CONFIG_KEY]
+            
+            if self.is_training:
+                preprocessed_train_dir = os.path.join(self.training_pipeline_config.artifact_dir,
+                                            DATA_PREPROCESSING_ARTIFACT_DIR,
+                                            self.time_stamp,                                        
+                                            DATA_PREPROCESSING_TRAIN_DIR)
+
+                preprocessed_pred_dir =None
+
+            else:
+                preprocessed_train_dir = None
+                preprocessed_pred_dir = os.path.join(self.training_pipeline_config.artifact_dir,
+                                            DATA_PREPROCESSING_ARTIFACT_DIR,
+                                            self.time_stamp,                                        
+                                            DATA_PREPROCESSING_PRED_DIR)
+            
+            ohe_file_path = os.path.join(self.training_pipeline_config.artifact_dir,
+                                        DATA_PREPROCESSING_ARTIFACT_DIR,
+                                        data_preprocessing_config[DATA_PREPROCESSING_OHE_MODEL_DIR_KEY],
+                                        data_preprocessing_config[DATA_PREPROCESSING_ONE_HOT_ENCODER_FILE_NAME_KEY])
+                                          
+            os.makedirs(os.path.join(self.training_pipeline_config.artifact_dir,
+                                        DATA_PREPROCESSING_ARTIFACT_DIR,
+                                        data_preprocessing_config[DATA_PREPROCESSING_OHE_MODEL_DIR_KEY]), exist_ok=True)            
+            
+            return DataPreprocessingConfig(
+                preprocessed_train_dir=preprocessed_train_dir,
+                preprocessed_pred_dir=preprocessed_pred_dir,
+                ohe_file_path=ohe_file_path,
+            )
+
+        except Exception as e:
+            raise NASException(e, sys) from e

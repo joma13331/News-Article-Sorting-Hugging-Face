@@ -24,3 +24,8 @@ cassandra_database_config:
   environment_key_client_id: CASSANDRA_CLIENT_ID
   environment_key_client_secret: CASSANDRA_CLIENT_SECRET
   keyspace_name: news_article_sorting_internship
+
+data_preprocessing_config:
+  preprocessed_dir: preprocessed_dataset 
+  ohe_model_dir : pickle_models
+  one_hot_encoder_file_name: ohe.pickle
