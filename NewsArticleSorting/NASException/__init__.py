@@ -50,5 +50,5 @@ class NASException(Exception):
         return self.error_message
 
 
-    def __repr__(self) -> str:
-        return NASException.__name__.str()
+    # def __repr__(self) -> str:
+    #     return NASException.__name__.str()

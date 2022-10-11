@@ -83,20 +83,11 @@ class NASDataPreprocessing:
         
         except Exception as e:
             raise NASException(e, sys) from e
-
-    def load_from_disk(self):
-        try:
-            nas_dataset = load_from_disk("test_artifact/news_sorting")
-            return nas_dataset
-        except Exception as e:
-            raise NASException(e, sys) from e
-
     
     def initiate_data_preprocessing(self)-> DataPreprocessingArtifact:
         try:
             nas_dataset = self.obtain_train_test_val_dataset_dict()
             nas_dataset = self.obtain_one_hot_encoded_labels(dataset_dict=nas_dataset)
-            nas_dataset.set_format("torch")
             self.save_data_to_disk(nas_dataset)
 
             is_preprocessed = True

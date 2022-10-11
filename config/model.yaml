@@ -1,0 +1,22 @@
+hyperparameter_tuning:
+  models:
+    - bert-base-uncased
+    - roberta-base
+    - albert-base-v2
+
+  learning_rate:
+    start: 1e-5
+    end: 1e-3
+
+  optimizers:
+    - Adam
+    - RMSprop
+    - SGD
+
+  hyperparameter_tuning_epochs: 2
+  number_of_models_to_check: 1
+
+model_args:
+  num_train_epochs: 2
+  train_batch_size: 4
+  

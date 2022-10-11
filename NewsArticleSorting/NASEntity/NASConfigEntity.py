@@ -18,3 +18,17 @@ CassandraDatabaseConfig = namedtuple("CassandraDatabaseConfig",
 
 DataPreprocessingConfig = namedtuple("DataPreprocessingConfig", ["preprocessed_train_dir",
  "preprocessed_pred_dir", "ohe_file_path"])   
+
+ModelTrainingConfig = namedtuple("ModelTrainingConfig",
+                                ["trained_model_path", "base_accuracy", "max_seq_length",
+                                "padding_type", "truncation", "models", "optimizers", 
+                                "learning_rate_start", "learning_rate_end", 
+                                "hyperparameter_tuning_epochs", "num_train_epochs",
+                                "train_batch_size",
+                                "input_feature","no_of_models_to_check"])
+
+ModelEvaluationConfig = namedtuple("ModelEvaluationConfig",
+                                ["model_evaluation_result_path", "base_accuracy", "eval_batch_size"])
+
+ModelPusherConfig = namedtuple("ModelPusherConfig",
+                            ["deployed_model_path", "deployed_model_details_path"])

@@ -63,32 +63,44 @@ DATA_PREPROCESSING_ONE_HOT_ENCODER_FILE_NAME_KEY = "one_hot_encoder_file_name"
 
 # Model Trainer related variable
 
-MODEL_TRAINER_MODEL_DETAILS_KEY = "model_detail"
-MODEL_TRAINER_MODEL_NAME_KEY = "model_name"
-MODEL_TRAINER_MODEL_TYPE_KEY = "model_type"
+MODEL_TRAINER_HYPERPARAMETER_TUNING_KEY = "hyperparameter_tuning"
+MODEL_TRAINER_MODEL_NAMES_KEY = "models"
+MODEL_TRAINER_LEARNING_RATE_KEY = "learning_rate"
+MODEL_TRAINER_LEARNING_START_KEY = "start"
+MODEL_TRAINER_LEARNING_END_KEY = "end"
+MODEL_TRAINER_OPTIMIZERS_KEY = "optimizers"
+MODEL_TRAINER_HYPERPARAMETER_TUNING_EPOCHS_KEY = "hyperparameter_tuning_epochs"
 MODEL_TRAINER_MODEL_ARGS_KEY = "model_args"
+MODEL_TRAINING_NUM_TRAIN_EPOCHS_KEY = "num_train_epochs"
+MODEL_TRAINING_TRAIN_BATCH_SIZE_KEY = "train_batch_size"
+MODEL_TRAINING_NUMBER_OF_MODELS_TO_CHECK = "number_of_models_to_check"
 
-MODEL_TRAINER_CONFIG_KEY = "model_trainer_config"
+MODEL_TRAINER_CONFIG_KEY = "model_training_config"
 MODEL_TRAINER_ARTIFACT_DIR = "ModelTraining"
-MODEL_TRAINING_TRAINED_MODEL_DIR_KEY = "trained_model_dir"
+MODEL_TRAINER_TRAINED_MODEL_DIR_KEY = "trained_model_dir"
 MODEL_TRAINER_BASE_ACCURACY_KEY = "base_accuracy"
 MODEL_TRAINER_MODEL_CONFIG_DIR_KEY = "model_config_dir"
 MODEL_TRAINER_MODEL_CONFIG_FILE_NAME_KEY = "model_config_file_name"
-MODEL_TRAINER_LEARNING_RATE_KEY = "learning_rate"
+MODEL_TRAINER_MAX_SEQ_LENGTH_KEY = "max_seq_length"
+MODEL_TRAINER_PADDING_TYPE_KEY = "padding_type"
+MODEL_TRAINER_TRUNCATION_KEY = "truncation"
+MODEL_TRAINER_INPUT_FEATURE_KEY = "input_feature"
 
 # Model evaluation related variables
 
 MODEL_EVALUATION_CONFIG_KEY = "model_evaluation_config"
 MODEL_EVALUATION_ARTIFACT_DIR = "ModelEvaluation"
+MODEL_EVALUATION_RESULT_DIR_KEY = "evaluation_result_dir"
 MODEL_EVALUATION_FILE_NAME_KEY = "model_evaluation_file_name"
 MODEL_EVALUATION_BASE_ACCURACY_KEY = "base_accuracy"
-MODEL_EVALUATION_MODEL_ACCESS_NAME = "model_access_name"
+MODEL_EVALUATION_BATCH_SIZE_KEY = "eval_batch_size"
 
 # Model pusher related variables
 
 MODEL_PUSHER_CONFIG_KEY = "model_pusher_config"
-MODEL_PUSHER_ARTIFACT_DIR = "ModelPusher"
-MODEL_PUSHER_MODEL_EXPORT_DIR_KEY = "model_export_dir"
+MODEL_PUSHER_MODEL_EXPOSED_DIR_KEY = "model_exposed_dir"
+MODEL_PUSHER_DEPLOYED_MODEL_DETAILS_KEY = "deployed_model_details"
+MODEL_PUSHER_DEPLOYED_MODEL_FILENAME_KEY = "deployed_model_filename"
 
 # predictor related variables
 

@@ -11,3 +11,13 @@ DataValidationArtifact = namedtuple("DataValidationArtifact",
 DataPreprocessingArtifact = namedtuple("DataPreprocessingArtifact",
                                         ["is_preprocessed", "message", "train_dir_path",
                                         "pred_dir_path"])
+
+ModelTrainerArtifact = namedtuple("ModelTrainerArtifact",
+                                ["is_trained", "message", "trained_model_path", "model_name",
+                                "optimizer", "lr"])
+
+ModelEvaluationArtifact = namedtuple("ModelEvaluationArtifact",
+                                ["is_accepted", "message",  "model_evaluation_result_path"])
+
+ModelPusherArtifact = namedtuple("ModelPusherArtifact",
+                                ["is_pushed", "message"])

@@ -29,3 +29,26 @@ data_preprocessing_config:
   preprocessed_dir: preprocessed_dataset 
   ohe_model_dir : pickle_models
   one_hot_encoder_file_name: ohe.pickle
+
+
+model_training_config:
+  trained_model_dir: trained_model
+  base_accuracy: 0.2
+  model_config_dir: config
+  model_config_file_name: model.yaml
+  max_seq_length: 256
+  padding_type: max_length
+  truncation: True
+  input_feature: Text
+
+
+model_evaluation_config:
+  evaluation_result_dir: model_evaluation
+  eval_batch_size: 4
+  base_accuracy: 0.2
+  model_evaluation_file_name: model_evaluation.yaml
+
+model_pusher_config:
+  model_exposed_dir: ModelSelected
+  deployed_model_details: deployed_model_details.yaml
+  deployed_model_filename: model.bin
