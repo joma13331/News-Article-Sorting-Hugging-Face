@@ -1,14 +1,13 @@
-from email import message
-from typing import Any
 import numpy as np
 import optuna
+from optuna.pruners import ThresholdPruner
 from tqdm import tqdm
 import sys
 import torch
 from sklearn import metrics
 import torch.optim as optim
 from torch.utils.data.dataloader import DataLoader
-from optuna.trial import TrialState
+
 
 from transformers import get_linear_schedule_with_warmup,AutoTokenizer, DataCollatorWithPadding
 
@@ -115,83 +114,79 @@ class NASModelTraining:
 
 
     def objective(self, trial)-> float:
-        try:
-            
-            device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+           
+        device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
-            model_name = trial.suggest_categorical("model_name", self.model_training_config.models)
+        model_name = trial.suggest_categorical("model_name", self.model_training_config.models)
 
-            self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-            data_collator = DataCollatorWithPadding(tokenizer=self.tokenizer)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        data_collator = DataCollatorWithPadding(tokenizer=self.tokenizer)
 
-            model = NASModel(model_name=model_name)
-            model.to(device)
+        model = NASModel(model_name=model_name)
+        model.to(device)
 
-            param_optimizer = list(model.named_parameters()) 
-            no_decay = ["bias", "LayerNorm.bias", "LayerNorm.weight"]
+        param_optimizer = list(model.named_parameters()) 
+        no_decay = ["bias", "LayerNorm.bias", "LayerNorm.weight"]
 
-            optimizer_parameters = [
-                {
-                    "params": [
-                        p for n, p in param_optimizer if not any(nd in n for nd in no_decay)
-                    ],
-                    "weight_decay": 0.001,
-                },
-                {
-                    "params": [
-                        p for n, p in param_optimizer if any(nd in n for nd in no_decay)
-                    ],
-                    "weight_decay": 0.0,
-                },
-            ]
+        optimizer_parameters = [
+            {
+                "params": [
+                    p for n, p in param_optimizer if not any(nd in n for nd in no_decay)
+                ],
+                "weight_decay": 0.001,
+            },
+            {
+                "params": [
+                    p for n, p in param_optimizer if any(nd in n for nd in no_decay)
+                ],
+                "weight_decay": 0.0,
+            },
+        ]
 
-            optimizer_name = trial.suggest_categorical("optimizer_name", self.model_training_config.optimizers)
-            lr = trial.suggest_float("lr", float(self.model_training_config.learning_rate_start),
-                                     float(self.model_training_config.learning_rate_end), log=True)
+        optimizer_name = trial.suggest_categorical("optimizer_name", self.model_training_config.optimizers)
+        lr = trial.suggest_float("lr", float(self.model_training_config.learning_rate_start),
+                                    float(self.model_training_config.learning_rate_end), log=True)
 
-            optimizer = getattr(optim, optimizer_name)(optimizer_parameters, lr=lr)
+        optimizer = getattr(optim, optimizer_name)(optimizer_parameters, lr=lr)
 
-            nas_dataset = self.load_from_disk()
+        nas_dataset = self.load_from_disk()
 
-            nas_dataset = nas_dataset.map(self.tokenizer_function, batched=True, remove_columns=['Text'])
+        nas_dataset = nas_dataset.map(self.tokenizer_function, batched=True, remove_columns=['Text'])
 
-            train_data_loader = DataLoader(
-                nas_dataset['train'],
-                batch_size = self.model_training_config.train_batch_size,
-                collate_fn=data_collator
+        train_data_loader = DataLoader(
+            nas_dataset['train'],
+            batch_size = self.model_training_config.train_batch_size,
+            collate_fn=data_collator
+        )
+
+        val_data_loader = DataLoader(
+            nas_dataset['validation'],
+            batch_size=self.model_training_config.train_batch_size,
+            collate_fn=data_collator
+        )
+
+        num_train_steps=int(len(train_data_loader)*self.model_training_config.hyperparameter_tuning_epochs)
+
+        scheduler = get_linear_schedule_with_warmup(
+                optimizer,
+                num_warmup_steps=0,
+                num_training_steps=num_train_steps
             )
 
-            val_data_loader = DataLoader(
-                nas_dataset['validation'],
-                batch_size=self.model_training_config.train_batch_size,
-                collate_fn=data_collator
-            )
+        
+        for epoch in range(self.model_training_config.hyperparameter_tuning_epochs):
+            self.train_fn(train_data_loader, model, optimizer, device, scheduler)
+            outputs, targets = self.eval_fn(val_data_loader, model, device)
+            outputs = np.array(outputs)>=np.max(outputs,axis=1).reshape(-1,1)
+            accuracy = metrics.accuracy_score(targets, outputs)
+            print(f"Accuracy Score = {accuracy}")
+        
+            trial.report(accuracy, epoch)
 
-            num_train_steps=int(len(train_data_loader)*self.model_training_config.hyperparameter_tuning_epochs)
+            if trial.should_prune():
+                raise optuna.TrialPruned()
 
-            scheduler = get_linear_schedule_with_warmup(
-                    optimizer,
-                    num_warmup_steps=0,
-                    num_training_steps=num_train_steps
-                )
-
-            
-            for epoch in range(self.model_training_config.hyperparameter_tuning_epochs):
-                self.train_fn(train_data_loader, model, optimizer, device, scheduler)
-                outputs, targets = self.eval_fn(val_data_loader, model, device)
-                outputs = np.array(outputs)>=np.max(outputs,axis=1).reshape(-1,1)
-                accuracy = metrics.accuracy_score(targets, outputs)
-                print(f"Accuracy Score = {accuracy}")
-            
-                trial.report(accuracy, epoch)
-
-                if trial.should_prune():
-                    raise optuna.exceptions.TrialPruned()
-
-            return accuracy    
-
-        except Exception as e:
-            raise NASException(e, sys) from e
+        return accuracy    
 
     def train_best_model(self, model_name: str, optimizer_name: str, lr: float)-> float:
         try:
@@ -239,7 +234,7 @@ class NASModelTraining:
                 collate_fn=data_collator
             )
 
-            num_train_steps=int(len(train_data_loader)*self.model_training_config.hyperparameter_tuning_epochs)
+            num_train_steps=int(len(train_data_loader)*self.model_training_config.num_train_epochs)
 
             scheduler = get_linear_schedule_with_warmup(
                     optimizer,
@@ -270,7 +265,7 @@ class NASModelTraining:
 
     def initiate_model_training(self)-> ModelTrainerArtifact:
         try:
-            study = optuna.create_study(direction="maximize")
+            study = optuna.create_study(direction="maximize", pruner=ThresholdPruner(lower=0.2))
             study.optimize(lambda trial: self.objective(trial), n_trials=self.model_training_config.no_of_models_to_check)
 
             best_parameters = study.best_trial.params

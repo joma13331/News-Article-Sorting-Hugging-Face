@@ -300,3 +300,25 @@ class NASConfiguration:
         except Exception as e:
             raise NASException(e, sys) from e
     
+
+    def get_predictor_config(self)-> PredictorConfig:
+        try:
+            predictor_config = self.config_info[PREDICTOR_CONFIG_KEY]
+
+            predictor_dir = os.path.join(self.training_pipeline_config.artifact_dir,
+                                        PREDICTOR_ARTIFACT_DIR,
+                                        self.time_stamp,
+                                        predictor_config[PREDICTOR_RESULT_DIR_KEY])
+
+            os.makedirs(predictor_dir, exist_ok=True)
+
+            predictor_result_filepath = os.path.join(predictor_dir, predictor_config[PREDICTOR_RESULT_FILENAME_KEY])
+            pred_batch_size = predictor_config[PREDICTOR_BATCH_SIZE_KEY]
+
+            return PredictorConfig(
+                prediction_result_filepath=predictor_result_filepath,
+                pred_batch_size=pred_batch_size
+            )
+
+        except Exception as e:
+            raise NASException(e, sys) from e

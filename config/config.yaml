@@ -52,3 +52,8 @@ model_pusher_config:
   model_exposed_dir: ModelSelected
   deployed_model_details: deployed_model_details.yaml
   deployed_model_filename: model.bin
+
+predictor_config:
+  predictor_result_dir: PredictionResults
+  predictor_result_filename: nas_predictions.csv
+  pred_batch_size: 4

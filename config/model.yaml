@@ -13,10 +13,10 @@ hyperparameter_tuning:
     - RMSprop
     - SGD
 
-  hyperparameter_tuning_epochs: 2
-  number_of_models_to_check: 1
+  hyperparameter_tuning_epochs: 3
+  number_of_models_to_check: 10
 
 model_args:
-  num_train_epochs: 2
+  num_train_epochs: 4
   train_batch_size: 4
   

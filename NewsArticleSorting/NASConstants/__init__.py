@@ -105,3 +105,7 @@ MODEL_PUSHER_DEPLOYED_MODEL_FILENAME_KEY = "deployed_model_filename"
 # predictor related variables
 
 PREDICTOR_ARTIFACT_DIR = "Prediction"
+PREDICTOR_CONFIG_KEY = "predictor_config"
+PREDICTOR_RESULT_DIR_KEY = "predictor_result_dir"
+PREDICTOR_RESULT_FILENAME_KEY = "predictor_result_filename"
+PREDICTOR_BATCH_SIZE_KEY = "pred_batch_size"

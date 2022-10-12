@@ -32,3 +32,6 @@ ModelEvaluationConfig = namedtuple("ModelEvaluationConfig",
 
 ModelPusherConfig = namedtuple("ModelPusherConfig",
                             ["deployed_model_path", "deployed_model_details_path"])
+
+PredictorConfig = namedtuple("PredictorConfig",
+                            ["pred_batch_size", "prediction_result_filepath"])

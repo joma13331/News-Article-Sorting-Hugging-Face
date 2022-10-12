@@ -7,7 +7,6 @@ import cassandra
 from cassandra.query import dict_factory
 from cassandra.cluster import Cluster
 from cassandra.auth import PlainTextAuthProvider
-from requests import session
 
 from NewsArticleSorting.NASException import NASException
 from NewsArticleSorting.NASLogger import logging

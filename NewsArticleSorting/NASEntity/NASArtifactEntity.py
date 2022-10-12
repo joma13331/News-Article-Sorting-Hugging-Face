@@ -21,3 +21,6 @@ ModelEvaluationArtifact = namedtuple("ModelEvaluationArtifact",
 
 ModelPusherArtifact = namedtuple("ModelPusherArtifact",
                                 ["is_pushed", "message"])
+
+PredictorArtifact = namedtuple("PredictorArtifact",
+                                    ["is_prediction_done", "message"])

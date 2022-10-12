@@ -1,12 +1,9 @@
-import os
 import sys
-import pickle
-from typing import Any
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 
-from datasets import DatasetDict, load_dataset, load_from_disk
-from transformers import AutoTokenizer, DataCollatorWithPadding
+from datasets import DatasetDict, load_dataset
+
 
 from NewsArticleSorting.NASException import NASException
 from NewsArticleSorting.NASLogger import logging
@@ -87,16 +84,16 @@ class NASDataPreprocessing:
     def initiate_data_preprocessing(self)-> DataPreprocessingArtifact:
         try:
             nas_dataset = self.obtain_train_test_val_dataset_dict()
-            nas_dataset = self.obtain_one_hot_encoded_labels(dataset_dict=nas_dataset)
-            self.save_data_to_disk(nas_dataset)
-
-            is_preprocessed = True
-
+            
             if self.data_preprocessing_config.preprocessed_pred_dir is None:
+                nas_dataset = self.obtain_one_hot_encoded_labels(dataset_dict=nas_dataset)
                 message = f"The dataset is saved at {self.data_preprocessing_config.preprocessed_train_dir}"
             else:
                 message = f"The dataset is saved at {self.data_preprocessing_config.preprocessed_pred_dir}"
 
+            self.save_data_to_disk(nas_dataset)
+
+            is_preprocessed = True
 
             return DataPreprocessingArtifact(
                 is_preprocessed=is_preprocessed,

@@ -9,7 +9,6 @@ from NewsArticleSorting.NASDatabase.NASCassandraDB import NASCassandraDB
 from NewsArticleSorting.NASUtils.utils import read_yaml_file
 from NewsArticleSorting.NASException import NASException
 from NewsArticleSorting.NASLogger import logging
-from NewsArticleSorting.NASConfig.NASConfiguration import NASConfiguration
 from NewsArticleSorting.NASEntity.NASConfigEntity import DataValidationConfig
 from NewsArticleSorting.NASEntity.NASArtifactEntity import DataValidationArtifact, DataIngestionArtifact
 
@@ -275,16 +274,17 @@ class NASDataValidation:
                 )
                 return data_validation_artifact
 
-            cont, message, filenames = self.check_correct_domain_values(filenames=filenames)
+            if self.data_validation_config.validated_prediction_dir is None:
+                cont, message, filenames = self.check_correct_domain_values(filenames=filenames)
 
-            if not cont:
-                data_validation_artifact = DataValidationArtifact(
-                    is_validated=cont,
-                    message=message,
-                    train_file_path=None,
-                    prediction_file_path=None
-                )
-                return data_validation_artifact
+                if not cont:
+                    data_validation_artifact = DataValidationArtifact(
+                        is_validated=cont,
+                        message=message,
+                        train_file_path=None,
+                        prediction_file_path=None
+                    )
+                    return data_validation_artifact
 
             is_validated, message, train_file_path,  prediction_file_path = self.combine(
                 filenames=filenames)
