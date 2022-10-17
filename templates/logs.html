@@ -1,0 +1,25 @@
+{% extends "base_template.html" %}
+
+{% block content %}
+
+<h2 id="logs_heading">Project Logs</h2>
+
+<div id="log_input">
+    <p>Please enter how many recent logs you want to see.</p>
+    <form action="#" method="post">
+        <p><input type="text" name="num_logs"></p>
+        <p><input type="submit" value="See Logs"></p>
+    </form>
+</div>
+
+<div id="log_display">
+    <h3 id="message">{{message}}</h3>
+
+    {% for log in logs %}
+    <p>{{log}}</p>
+    {% endfor %}
+</div>
+
+<h3><a href="/">CLICK HERE TO GO BACK TO HOME PAGE</a></h3>
+
+{% endblock %}

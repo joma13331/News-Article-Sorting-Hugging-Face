@@ -1,0 +1,134 @@
+@charset "UTF-8";
+
+html {
+    box-sizing: border-box;
+    background-color: #aed7ef;
+  }
+  
+* {
+    box-sizing: inherit;
+}
+
+body {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 100%;
+    margin: 10em;
+    margin-top: 5em;
+    padding: 1em;
+    line-height: 2.5em;
+    border-style: solid;
+    border-color: darkblue;
+    color: darkblue;
+    /* background-color: #82a4b7; */
+}
+
+h1{
+    font-family: "Marko One", Georgia, serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+
+    color: darkblue;
+    font-stretch: condensed;
+    
+}
+
+h2{
+    font-family: "Marko One", Georgia, serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: darkblue;
+    font-stretch: condensed;
+}
+
+#page_container{
+    display: grid;
+    grid-template-rows: min-content min-content 4.5fr;
+    grid-template-areas: "heading_banner"
+    "project_introduction"
+    "prediction_feature";
+}
+
+#heading_banner{
+    grid-area: "heading_banner";
+    display: grid;
+    grid-template-rows: min-content min-content;
+    grid-template-areas: "top_banner"
+    "bottom_banner";   
+    /* background-color: #436578; */
+    
+}
+
+#top_banner{
+    grid-area: "top_banner";
+    display: grid;
+    align-items: center;
+    grid-template-columns: min-content 6fr min-content;
+    grid-area: "project_logo project_title ineuron_logo";
+}
+
+#project_logo{
+    background-color: #82a4b7;
+}
+#project_title{
+    align-self: center;
+    text-align: center;
+}
+
+#bottom_banner{
+    grid-area: bottom_banner;
+    margin-top: 0em;
+    padding-top: 0em;
+}
+
+nav ul{
+    list-style-type: none;
+    display: flex;
+    justify-content: space-around;
+}
+nav ul li a {
+    display: block;
+    border:  1px solid;
+    border-radius: .5em;
+    padding: .5em 1em;
+    /* margin: 0.5em */
+}
+
+#prediction_feature{
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "prediction_info   prediction_info"
+    "single_article_prediction multiple_article_prediction";
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+#project_introduction{
+    text-align: center;
+}
+
+#prediction_info{
+    grid-area: prediction_info;
+    text-align: center;
+}
+
+#single_article_prediction{
+    grid-area: single_article_prediction;
+}
+
+#multiple_article_prediction{
+    grid-area: multiple_article_prediction;
+}
+
+#log_input{
+    align-self: center;
+    align-items: center;
+    text-align: center;
+}
+
+#logs_heading{
+    text-align: center;
+}
+h3{
+    text-align: center;
+}

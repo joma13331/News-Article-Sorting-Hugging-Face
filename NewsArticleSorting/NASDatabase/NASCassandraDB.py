@@ -15,10 +15,19 @@ from NewsArticleSorting.NASEntity.NASConfigEntity import CassandraDatabaseConfig
 
 
 class NASCassandraDB:
+    """
+    :Class Name: NASCassandraDB
+    :Description: This class will handle all the relevant operations related to Cassandra Database.
 
+    Written By: Jobin Mathew
+    Interning at iNeuron Intelligence
+    Version: 1.0
+    """
     def __init__(self, 
     cassandra_database_config: CassandraDatabaseConfig) -> None:
         try:
+            logging.info( f"{'*'*20} Cassandra Database log started {'*'*20}")
+
             self.cassandra_database_config = cassandra_database_config
             self.session = self.db_connection()
 
@@ -27,6 +36,14 @@ class NASCassandraDB:
 
 
     def db_connection(self)-> cassandra.cluster.Session:
+        """
+        :Method Name: db_connection
+        :Description: This method connects to the keyspace used for storing the validated
+                      good dataset for this work.
+
+        :return: session which is a cassandra database connection
+        :On Failure:  Exception
+        """
         try:
             cloud_config = {
                 'secure_connect_bundle': self.cassandra_database_config.file_path_secure_connect
@@ -43,12 +60,24 @@ class NASCassandraDB:
 
             session.execute(f"USE {self.cassandra_database_config.keyspace_name}")
 
+            logging.info("database connection made")
+
             return session
 
         except Exception as e:
             raise NASException(e, sys) from e
 
     def create_table(self, column_names: dict):
+        """
+        :Method Name: create_table
+        :Description: This method creates a 'good_training_data' or 'good_prediction_data' table to store good data
+                      with the appropriate column names.
+
+        :param column_names: Column Names as expected from FCTPSchema based on DSA
+        
+        :return:None
+        :On Failure: Exception
+        """
         try:
             table_creation_query = f"CREATE TABLE IF NOT EXISTS {self.cassandra_database_config.table_name}(id int primary key,"
 
@@ -57,16 +86,24 @@ class NASCassandraDB:
 
             table_creation_query = table_creation_query[:-1] + ");"
 
-            print(table_creation_query)
-
             self.session.execute(table_creation_query)
 
             self.session.execute(f"truncate table {self.cassandra_database_config.table_name};")
+
+            logging.info(f"{self.cassandra_database_config.table_name} table created")
 
         except Exception as e:
             raise NASException(e, sys) from e
 
     def insert_valid_data(self, df: pd.DataFrame):
+        """
+        :Method Name: insert_valid_data
+        :Description: This method uploads all the files in the good Data folder
+                      to the good_data tables in cassandra database.
+        
+        :return: None
+        :On Failure: Exception
+        """
         try:
             
             col_names = "id,"
@@ -95,12 +132,23 @@ class NASCassandraDB:
                     tup = tuple(temp_lis)
                 insert_query = f"INSERT INTO {self.cassandra_database_config.table_name}({col_names}) VALUES {tup};"  
 
-                self.session.execute(insert_query)  
+                self.session.execute(insert_query) 
+
+                logging.info(f"data inserted into  the table {self.cassandra_database_config.table_name}") 
                
         except Exception as e:
             raise NASException(e, sys) from e
     
     def data_db_to_csv(self, validated_file_path):
+        """
+        :Method Name: data_db_to_csv
+        parameter: validated_file_path - path to save the csv file.
+        :Description: This method downloads all the good data from the cassandra
+                      database to a csv file for preprocessing and training.
+        
+        :return: None
+        :On Failure: Exception
+        """
         try:
             
             col_name_query = f"select column_name from system_schema.columns where keyspace_name=" \
@@ -136,12 +184,21 @@ class NASCassandraDB:
                 # Writing the data
                 csv_writer.writerows(data)
 
+            logging.info(f"the data from {self.cassandra_database_config.table_name} saved to {validated_file_path}")
         except Exception as e:
             raise NASException(e, sys) from e
 
     def terminate_session(self):
+        """
+        :Method Name: terminate_session
+        :Description: This method terminates the datastax database session.
+        
+        :return: None
+        :On Failure: Exception
+        """
         try:
             self.session.shutdown()
+            logging.info("database connection terminated")
 
         except Exception as e:
             raise NASException(e, sys) from e

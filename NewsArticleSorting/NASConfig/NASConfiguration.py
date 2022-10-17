@@ -10,16 +10,28 @@ from NewsArticleSorting.NASConstants import *
 
 
 class NASConfiguration:
+    """
+    Class Name: NASConfiguration
+    Description: This class is responsible for generating configuration entities from config.yaml file
 
+    Written By: Jobin Mathew
+    Interning at iNeuron Intelligence
+    Version: 1.0
+    """
     def __init__(self,
     config_file_path: str=CONFIG_FILE_PATH,
     current_time_stamp: str=CURRENT_TIME_STAMP,
-    is_training=True) -> None:
+    is_training=True, is_single_sentence:bool=False,
+    uploaded_dataset_dir:str = None) -> None:
 
         try:
+            logging.info( f"{'*'*20}Configuration log started {'*'*20}")
+
             self.config_info = read_yaml_file(config_file_path)
             self.time_stamp = current_time_stamp
             self.is_training = is_training
+            self.is_single_sentence = is_single_sentence
+            self.uploaded_dataset_dir = uploaded_dataset_dir
 
             self.training_pipeline_config = self.get_training_pipeline_config()
 
@@ -29,7 +41,13 @@ class NASConfiguration:
 
     
     def get_training_pipeline_config(self)-> TrainingPipelineConfig:
+        """
+        Method Name: get_training_pipeline_config
 
+        Description: This method generated the config file related to training pipeline
+        
+        returns: TrainingPipelineConfig - contains all relevant information with regards to training file
+        """
         try:
             training_pipeline_config = self.config_info[TRAINING_PIPELINE_CONFIG_KEY]
             artifact_dir = os.path.join(ROOT_DIR,
@@ -44,14 +62,22 @@ class NASConfiguration:
             raise NASException(e, sys) from e
 
     def get_data_ingestion_config(self)-> DataIngestionConfig:
+        """
+        Method Name: get_data_ingestion_config
 
+        Description: This method generated the config file related to data ingestion process.
+        
+        returns: DataIngestionConfig - contains all relevant information with regards to data ingestion.
+        """
         try:
             data_ingestion_config = self.config_info[DATA_INGESTION_CONFIG_KEY]
-
+            
             if self.is_training:
-
-                raw_input_dir = os.path.join(ROOT_DIR,
-                                            data_ingestion_config[DATA_INGESTION_TRAINING_INPUT_DIR_KEY])
+                if self.uploaded_dataset_dir is None:
+                    raw_input_dir = os.path.join(ROOT_DIR,
+                                                data_ingestion_config[DATA_INGESTION_TRAINING_INPUT_DIR_KEY])
+                else:
+                    raw_input_dir = os.path.join(ROOT_DIR, self.uploaded_dataset_dir)
                 
                 ingested_dir = os.path.join(self.training_pipeline_config.artifact_dir,
                                             DATA_INGESTION_ARTIFACT_DIR,
@@ -59,7 +85,11 @@ class NASConfiguration:
                                             data_ingestion_config[DATA_INGESTION_TRAINING_DIR_NAME_KEY])
 
             else:
-                raw_input_dir = os.path.join(ROOT_DIR, data_ingestion_config[DATA_INGESTION_PREDICTION_INPUT_DIR_KEY])
+                if self.uploaded_dataset_dir is None:
+                    raw_input_dir = os.path.join(ROOT_DIR, data_ingestion_config[DATA_INGESTION_PREDICTION_INPUT_DIR_KEY])
+                else:
+                    raw_input_dir = os.path.join(ROOT_DIR, self.uploaded_dataset_dir)
+
                 ingested_dir = os.path.join(self.training_pipeline_config.artifact_dir,
                                             DATA_INGESTION_ARTIFACT_DIR,
                                             self.time_stamp,
@@ -78,6 +108,13 @@ class NASConfiguration:
 
     
     def get_data_validation_config(self) -> DataValidationConfig:
+        """
+        Method Name: get_data_validation_config
+
+        Description: This method generated the config file related to data validation process.
+        
+        returns: DataValidationConfig - contains all relevant information with regards to data validation.
+        """
         try:
 
             data_validation_config = self.config_info[DATA_VALIDATION_CONFIG_KEY]
@@ -112,7 +149,13 @@ class NASConfiguration:
             raise NASException(e, sys) from e
 
     def get_cassandra_database_config(self)-> CassandraDatabaseConfig:
+        """
+        Method Name: get_cassandra_database_config
 
+        Description: This method generated the config file related to cassandra database operation.
+        
+        returns: CassandraDatabaseConfig - contains all relevant information with regards to cassandra database operation.
+        """
         try:
             cassandra_db_config = self.config_info[CASSANDRA_DATABASE_CONFIG_KEY]
 
@@ -144,6 +187,13 @@ class NASConfiguration:
 
 
     def get_data_preprocessing_config(self)-> DataPreprocessingConfig:
+        """
+        Method Name: get_data_preprocessing_config
+
+        Description: This method generated the config file related to data preprocessing process.
+        
+        returns: DataPreprocessingConfig - contains all relevant information with regards to data preprocessing.
+        """
         try:
             data_preprocessing_config = self.config_info[DATA_PREPROCESSING_CONFIG_KEY]
             
@@ -167,7 +217,8 @@ class NASConfiguration:
                                         data_preprocessing_config[DATA_PREPROCESSING_OHE_MODEL_DIR_KEY],
                                         data_preprocessing_config[DATA_PREPROCESSING_ONE_HOT_ENCODER_FILE_NAME_KEY])
 
-            os.makedirs(os.path.join(self.training_pipeline_config.artifact_dir,
+            if not self.is_single_sentence:
+                os.makedirs(os.path.join(self.training_pipeline_config.artifact_dir,
                                         DATA_PREPROCESSING_ARTIFACT_DIR,
                                         data_preprocessing_config[DATA_PREPROCESSING_OHE_MODEL_DIR_KEY]), exist_ok=True)            
             
@@ -181,6 +232,13 @@ class NASConfiguration:
             raise NASException(e, sys) from e
 
     def get_model_training_config(self)-> ModelTrainingConfig:
+        """
+        Method Name: get_model_training_config
+
+        Description: This method generated the config file related to model training process.
+        
+        returns: ModelTrainingConfig - contains all relevant information with regards to model training.
+        """
         try:
             model_training_config = self.config_info[MODEL_TRAINER_CONFIG_KEY]
 
@@ -195,8 +253,8 @@ class NASConfiguration:
                                             self.time_stamp,
                                             model_training_config[MODEL_TRAINER_TRAINED_MODEL_DIR_KEY]
                                             )
-                                            
-            os.makedirs(trained_model_dir, exist_ok=True)
+            if not self.is_single_sentence:                                  
+                os.makedirs(trained_model_dir, exist_ok=True)
 
             trained_model_path = os.path.join(trained_model_dir, "model.bin")
 
@@ -249,6 +307,13 @@ class NASConfiguration:
             raise NASException(e, sys) from e
 
     def get_model_evaluation_config(self)-> ModelEvaluationConfig:
+        """
+        Method Name: get_model_evaluation_config
+
+        Description: This method generated the config file related to model evaluation process.
+        
+        returns: ModelEvaluationConfig - contains all relevant information with regards to model evaluation.
+        """
         try:
             model_evaluation_config = self.config_info[MODEL_EVALUATION_CONFIG_KEY]
 
@@ -275,6 +340,13 @@ class NASConfiguration:
             raise NASException(e,sys) from e
 
     def get_model_pusher_config(self)-> ModelPusherConfig:
+        """
+        Method Name: get_model_pusher_config
+
+        Description: This method generated the config file related to model pushing process.
+        
+        returns: ModelPusherConfig - contains all relevant information with regards to model pushing.
+        """
         try:
             model_pusher_config = self.config_info[MODEL_PUSHER_CONFIG_KEY]
 
@@ -302,6 +374,13 @@ class NASConfiguration:
     
 
     def get_predictor_config(self)-> PredictorConfig:
+        """
+        Method Name: get_predictor_config
+
+        Description: This method generated the config file related to prediction process.
+        
+        returns: PredictorConfig - contains all relevant information with regards to prediction pushing.
+        """
         try:
             predictor_config = self.config_info[PREDICTOR_CONFIG_KEY]
 

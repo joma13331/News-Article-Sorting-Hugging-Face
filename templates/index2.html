@@ -1,0 +1,52 @@
+{% extends "base_template.html" %}
+
+{% block content %}
+
+<div id="project_introduction">
+    <p>
+        This Web Application implements a Machine Learning solution to classify News Articles into 5 categories -
+        Business, Entertainment, Politics, Sport and Technology. This application utilizes state-of-the-art 
+        transformer models to process the news article and classify it into its correct category.    
+        The demand for information by users has been growing continuously, so it is crucial that the news is classified
+        to allow users to access the information of interest quickly and effectively.
+        This way, the machine learning model for automated news classification could be used to identify topics 
+        of untracked news and/or make individual suggestions based on the user's prior interests.         
+    </p>
+</div>
+
+<div id="prediction_feature">
+    <p id="prediction_info">
+        The Web Application can be utilized to Categorize a single News Article or multiple articles submitted in a single .csv file. 
+    </p>
+    <div id="single_article_prediction">
+        <h2>Single Article Prediction</h2>
+        <p>Please enter News Article to classify</p>
+        <form action="#" method="post">
+            <p><input type="text" name="news_text"></p>
+            <p><input type="submit" value="Classify"></p>
+        </form>
+        <p>Category: {{result}}</p>
+    </div>
+    <div id="multiple_article_prediction">
+        <h2>Multiple Article Prediction</h2>
+        <form action="/prediction" method="post" enctype="multipart/form-data">
+            <input type="file" name="dataset" accept=".csv">
+            <p><input type="submit" value="Classify"> <input type="reset"></p>
+            <p>{{message}}</p>
+            <p>To classify News Articles upload a .csv (Comma Separated Value) file in the following format</p>
+            <ul>
+                <li>Filename in format "NAS_{DDMMYYYY}_{HHMMSS}.csv"<br> Where "DDMMYYYY" represents the date and "HHMMSS" represents the time.</li>
+                <li>Column Names in the first row in following format:</li>
+                <li>
+                    <ol>
+                        <li>First Column Heading: "ArticleId"</li>
+                        <li>Second Column Heading: "Text"</li>
+                    </ol>
+                </li>
+                <li> The data to be predicted on should start from 2nd row</li>
+            </ul>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

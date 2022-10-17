@@ -3,7 +3,7 @@ from typing import List
 
 # Variable Declaration for setup function
 PROJECT_NAME = "News-Article-Sorting"
-VERSION = "0.0.1"
+VERSION = "0.0.2"
 AUTHOR = "Jobin Mathew"
 DESCRIPTION = "iNeuron Internship project based on Kaggle Dataset to Classify News Articles"
 

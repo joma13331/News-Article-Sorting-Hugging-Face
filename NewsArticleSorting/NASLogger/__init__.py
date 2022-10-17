@@ -1,8 +1,10 @@
 import os
 import logging
+from typing import List
 import pandas as pd
 
 from NewsArticleSorting.NASConstants import get_current_time_stamp
+from NewsArticleSorting.NASConstants import ROOT_DIR
 
 
 def get_log_filename() -> str:
@@ -28,7 +30,7 @@ logging.basicConfig(
     level=logging.INFO
     )
 
-def get_log_dataframe(file_path) -> pd.DataFrame:
+def get_log_list(num_logs:int = 50) -> List[str]:
     """
     FunctionName: get_log_dataframe
     Description: Converts the logfiles into pandas Datframe with columns:
@@ -37,15 +39,26 @@ def get_log_dataframe(file_path) -> pd.DataFrame:
     returns: Pandas DatFrame with only one column log_message
     """
 
-    data=[]
-    with open(file_path) as log_file:
-        for line in log_file.readlines():
-            data.append(line.split("^;"))
+    log_dir_path = os.path.join(ROOT_DIR, LOGS_DIR)
+    filenames = sorted(os.listdir(log_dir_path), reverse=True)
+    log_data = []
 
-    log_df = pd.DataFrame(data)
-    columns=["Time stamp","Log Level","line number","file name","function name","message"]
-    log_df.columns=columns
+    count = 0
+    for filename in filenames:
+        filename_path = os.path.join(log_dir_path, filename)
+        with open(filename_path) as log_file:
+            logs_file = log_file.readlines()
+            if not logs_file:
+                continue
+            if (count + len(logs_file)) >= num_logs:
+                [log_data.append(f"{line.split('^;')[0]}: {line.split('^;')[1]}:: {line.split('^;')[-1]}") for line in logs_file[:(num_logs-count)]] 
+                break
+            else:
+                [log_data.append(f"{line.split('^;')[0]}: {line.split('^;')[1]}:: {line.split('^;')[-1]}") for line in logs_file]
+                count += len(logs_file)
+
     
-    log_df["log_message"] = log_df['Time stamp'].astype(str) +":$"+ log_df["message"]
+    return log_data
 
-    return log_df[["log_message"]]
+if __name__ == "__main__":
+    print(len(get_log_list()))

@@ -14,7 +14,7 @@ hyperparameter_tuning:
     - SGD
 
   hyperparameter_tuning_epochs: 3
-  number_of_models_to_check: 10
+  number_of_models_to_check: 5
 
 model_args:
   num_train_epochs: 4

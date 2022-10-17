@@ -23,4 +23,4 @@ ModelPusherArtifact = namedtuple("ModelPusherArtifact",
                                 ["is_pushed", "message"])
 
 PredictorArtifact = namedtuple("PredictorArtifact",
-                                    ["is_prediction_done", "message"])
+                                    ["prediction_result_path", "message"])

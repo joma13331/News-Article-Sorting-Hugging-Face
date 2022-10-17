@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>       
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title> News Article Sorting Project</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marko+One&display=swap" rel="stylesheet"> 
+        <link rel="stylesheet" href="../static/css/main.css">
+    </head>
+
+    <body>
+        <div id="page_container">
+            <div id="heading_banner">
+                <div id="top_banner">
+                    <p id="project_logo"><img src="{{project_logo_url}}" alt="Project Logo" width=100px></p>
+
+                    <h1 id="project_title">
+                        News Article Sorting Project
+                    </h1>
+
+                    <p id="ineuron_logo"><img src={{ineuron_logo_url}} alt="iNeuron Logo" width=200px></p>
+                </div>
+                <div id="bottom_banner">
+                    <nav>
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/logs">Logs</a></li>
+
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+            {% block content %}
+            
+            {% endblock %}
+
+        </div>
+    </body>
+</html>
